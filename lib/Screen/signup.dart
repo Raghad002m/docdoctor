@@ -1,8 +1,8 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 
-class siginup extends StatelessWidget {
-  const siginup({super.key});
+class signup extends StatelessWidget {
+  const signup({super.key});
 
   @override
   Widget build(BuildContext context) {

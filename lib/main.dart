@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'Screen/DoctorSpeciality.dart';
-import 'Screen/Homescreen.dart';
+import 'Screen/HomeScreen.dart';
 import 'Screen/RecommendationDoctor.dart';
 import 'Screen/SignInScreen.dart';
 import 'Screen/SplashScreen.dart';
 import 'Screen/onboardScreen.dart';
-import 'Screen/siginup.dart';
+import 'Screen/signup.dart';
 
 
 void main() {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/splash': (context) => const SplashScreen(),
           '/signIn': (context) => const SignInScreen(),
-          '/signup': (context) => const siginup(),
+          '/signup': (context) => const signup(),
           '/onboard': (context) => const onboardScreen(),
           '/home': (context) => const HomeScreen(),
           '/DoctorSpeciality': (context) => const Doctorspeciality(),
