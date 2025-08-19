@@ -91,18 +91,22 @@ class signup extends StatelessWidget {
 
               SizedBox(
                 width: double.infinity,
-                height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFF247CFF),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  },
                   child: const Text(
                     "Create Account",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: TextStyle(fontSize: 16,color: Colors.white)
+                    ,
+
                   ),
                 ),
               ),
