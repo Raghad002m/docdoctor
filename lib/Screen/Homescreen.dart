@@ -1,7 +1,9 @@
 import 'package:docdoctor/Screen/profileScreen.dart';
 import 'package:flutter/material.dart';
 
+import 'MessagesScreen.dart';
 import 'NotificationScreen.dart';
+import 'SearchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -199,8 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      const Center(child: Text("💬 Chats")),
-      const Center(child: Text("🔍 Search")),
+      const MessagesScreen(),
+      const SearchScreen(),
       const Center(child: Text("📅 Appointments")),
     ];
 

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'Screen/ChatScreen.dart';
 import 'Screen/DoctorSpeciality.dart';
 import 'Screen/HomeScreen.dart';
+import 'Screen/MessagesScreen.dart';
 import 'Screen/NotificationScreen.dart';
 import 'Screen/RecommendationDoctor.dart';
+import 'Screen/SearchScreen.dart';
 import 'Screen/SignInScreen.dart';
 import 'Screen/SplashScreen.dart';
 import 'Screen/onboardScreen.dart';
@@ -33,5 +36,8 @@ class MyApp extends StatelessWidget {
           '/RecommendationDoctor': (context) => const RecommendationDoctor(),
           '/NotificationScreen': (context) => const NotificationScreen(),
           '/ProfileScreen' : (context) => const ProfileScreen(),
+          '/MessagesScreen' : (context) => const MessagesScreen(),
+          '/SearchScreen' : (context) => const SearchScreen(),
+
         });
   }}
