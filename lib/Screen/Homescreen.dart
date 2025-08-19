@@ -1,6 +1,8 @@
 import 'package:docdoctor/Screen/profileScreen.dart';
 import 'package:flutter/material.dart';
 
+import 'NotificationScreen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -12,21 +14,28 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 4) {
+      // لو ضغطت على آخر أيقونة → افتح البروفايل
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
-
+      // الصفحة الرئيسية
       SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -49,15 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, '/NotificationScreen');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                    );
                   },
                   child: const Icon(Icons.notifications_none, size: 28),
                 ),
+
               ],
             ),
-
             const SizedBox(height: 20),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -126,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-
             const SizedBox(height: 5),
 
             Row(
@@ -139,7 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: specialityItem("assets/General.jpg", "General"),
                 ),
                 const SizedBox(width: 25),
-
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, '/neurologicScreen');
@@ -147,7 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: specialityItem("assets/neurologic.jpg", "Neurologic"),
                 ),
                 const SizedBox(width: 25),
-
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, '/pediatricScreen');
@@ -155,7 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: specialityItem("assets/pediatric.jpg", "Pediatric"),
                 ),
                 const SizedBox(width: 25),
-
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, '/radiologyScreen');
@@ -164,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-
             const SizedBox(height: 15),
 
             Row(
@@ -189,37 +195,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-        ]),
+          ],
+        ),
       ),
 
       const Center(child: Text("💬 Chats")),
       const Center(child: Text("🔍 Search")),
       const Center(child: Text("📅 Appointments")),
-
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text("👤 Profile"),
-          const SizedBox(height: 20),
-
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                ),
-              );
-            },
-            child: const CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage("assets/profile.jpg"),
-            ),
-          ),
-        ],
-      )
-
-
     ];
 
     return Scaffold(
@@ -234,15 +216,11 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: ''),
           BottomNavigationBarItem(
-              icon: Icon(Icons.search, size: 40, color: Colors.blue), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: ''),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              radius: 15,
-              backgroundImage: AssetImage("assets/profile.jpg"),
-            ),
+            icon: Icon(Icons.search, size: 40, color: Colors.blue),
             label: '',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.circle), label: ''),
         ],
       ),
     );

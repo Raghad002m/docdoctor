@@ -6,6 +6,7 @@ import 'Screen/RecommendationDoctor.dart';
 import 'Screen/SignInScreen.dart';
 import 'Screen/SplashScreen.dart';
 import 'Screen/onboardScreen.dart';
+import 'Screen/profileScreen.dart';
 import 'Screen/signup.dart';
 
 
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomeScreen(),
           '/DoctorSpeciality': (context) => const Doctorspeciality(),
           '/RecommendationDoctor': (context) => const RecommendationDoctor(),
-          '/NotificationScreen': (context) => const NotificationScreen()
+          '/NotificationScreen': (context) => const NotificationScreen(),
+          '/ProfileScreen' : (context) => const ProfileScreen(),
         });
   }}
