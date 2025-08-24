@@ -360,7 +360,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
             title: const Text("Google Authenticator"),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // هنا تروح لصفحة Google Authenticator
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -375,7 +375,6 @@ class _SecurityScreenState extends State<SecurityScreen> {
   }
 }
 
-// صفحة Google Authenticator (مؤقتة كمثال)
 class GoogleAuthenticatorScreen extends StatelessWidget {
   const GoogleAuthenticatorScreen({super.key});
 
@@ -419,12 +418,6 @@ class _LanguageScreenState extends State<LanguageScreen> {
             value: 'العربية',
             groupValue: _lang,
             title: const Text('العربية'),
-            onChanged: (v) => setState(() => _lang = v!),
-          ),
-          RadioListTile<String>(
-            value: 'Français',
-            groupValue: _lang,
-            title: const Text('Français'),
             onChanged: (v) => setState(() => _lang = v!),
           ),
         ],
