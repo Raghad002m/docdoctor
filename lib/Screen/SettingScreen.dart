@@ -428,18 +428,22 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
 class LoggedOutPlaceholder extends StatelessWidget {
   const LoggedOutPlaceholder({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    Future.delayed(Duration.zero, () {
+      Navigator.pushReplacementNamed(context, '/signIn');
+    });
+
+    return const Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: const Text('Back to app'),
-          onPressed: () => Navigator.pop(context),
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }
 }
+
+
 
 class _SubScaffold extends StatelessWidget {
   final String title;
