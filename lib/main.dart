@@ -6,6 +6,7 @@ import 'Screen/MessagesScreen.dart';
 import 'Screen/NotificationScreen.dart';
 import 'Screen/RecommendationDoctor.dart';
 import 'Screen/SearchScreen.dart';
+import 'Screen/SettingScreen.dart';
 import 'Screen/SignInScreen.dart';
 import 'Screen/SplashScreen.dart';
 import 'Screen/onboardScreen.dart';
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
           '/ProfileScreen' : (context) => const ProfileScreen(),
           '/MessagesScreen' : (context) => const MessagesScreen(),
           '/SearchScreen' : (context) => const SearchScreen(),
+          '/SettingsScreen' : (context) => const SettingsScreen(),
+
 
         });
   }}

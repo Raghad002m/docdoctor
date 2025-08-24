@@ -14,8 +14,7 @@ class _SearchScreenState extends State<SearchScreen> {
   double ratingFilter = 0;
 
   final List<Map<String, dynamic>> recentSearches = [
-    {"text": "Dr. Ali"},
-    {"text": "Dentist"},
+
   ];
 
   final List<Map<String, dynamic>> doctors = [
