@@ -1,9 +1,15 @@
-import 'package:docdoctor/Screen/profileScreen.dart';
+// lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
+import '../data/services/api_service.dart';
+import '../models/doctor_model.dart';
 
+
+// شاشات ثانية
 import 'MessagesScreen.dart';
 import 'NotificationScreen.dart';
 import 'SearchScreen.dart';
+import 'doctorDetailScreen.dart';
+import 'profileScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,10 +20,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  late Future<List<DoctorModel>> _doctorsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _doctorsFuture = _loadDoctors();
+  }
+
+  Future<List<DoctorModel>> _loadDoctors() async {
+    final data = await ApiService.instance.getDoctors();
+    return data
+        .map<DoctorModel>((e) => DoctorModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
 
   void _onItemTapped(int index) {
     if (index == 4) {
-      // لو ضغطت على آخر أيقونة → افتح البروفايل
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ProfileScreen()),
@@ -32,45 +51,42 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
-      // الصفحة الرئيسية
+      // الصفحة الرئيسية مع دمج API
       SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // الترحيب + الإشعارات
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
-                    Text(
-                      "Hi",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text("Hi",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
                     SizedBox(height: 4),
-                    Text(
-                      "How Are you Today?",
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
+                    Text("How Are you Today?",
+                        style: TextStyle(color: Colors.grey, fontSize: 16)),
                   ],
                 ),
                 InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationScreen()),
                     );
                   },
                   child: const Icon(Icons.notifications_none, size: 28),
                 ),
-
               ],
             ),
             const SizedBox(height: 20),
+
+            // الكرت الأزرق
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -117,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
 
+            // Doctor Speciality
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -145,36 +162,33 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/generalScreen');
-                  },
-                  child: specialityItem("assets/General.jpg", "General"),
-                ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/generalScreen');
+                    },
+                    child: specialityItem("assets/General.jpg", "General")),
                 const SizedBox(width: 25),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/neurologicScreen');
-                  },
-                  child: specialityItem("assets/neurologic.jpg", "Neurologic"),
-                ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/neurologicScreen');
+                    },
+                    child: specialityItem("assets/neurologic.jpg", "Neurologic")),
                 const SizedBox(width: 25),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/pediatricScreen');
-                  },
-                  child: specialityItem("assets/pediatric.jpg", "Pediatric"),
-                ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/pediatricScreen');
+                    },
+                    child: specialityItem("assets/pediatric.jpg", "Pediatric")),
                 const SizedBox(width: 25),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/radiologyScreen');
-                  },
-                  child: specialityItem("assets/Radiology.jpg", "Radiology"),
-                ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/radiologyScreen');
+                    },
+                    child: specialityItem("assets/Radiology.jpg", "Radiology")),
               ],
             ),
             const SizedBox(height: 15),
 
+            // Recommendation Doctor (من API)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -196,6 +210,68 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ],
+            ),
+
+            // قائمة الأطباء من API
+            SizedBox(
+              height: 250,
+              child: FutureBuilder<List<DoctorModel>>(
+                future: _doctorsFuture,
+                builder: (context, snap) {
+                  if (snap.connectionState != ConnectionState.done) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snap.hasError) {
+                    return Center(child: Text('Error: ${snap.error}'));
+                  }
+                  final doctors = snap.data ?? [];
+                  if (doctors.isEmpty) {
+                    return const Center(child: Text('No doctors found'));
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: doctors.length,
+                    itemBuilder: (context, i) {
+                      final d = doctors[i];
+                      return GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                DoctorDetailScreen(doctorId: d.id),
+                          ),
+                        ),
+                        child: Container(
+                          width: 160,
+                          margin: const EdgeInsets.only(right: 12),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.blue.shade50,
+                          ),
+                          child: Column(
+                            children: [
+                              d.image != null
+                                  ? ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.network(d.image!,
+                                    height: 80, width: 80, fit: BoxFit.cover),
+                              )
+                                  : const Icon(Icons.person, size: 80),
+                              const SizedBox(height: 10),
+                              Text(d.name,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 16)),
+                              Text(d.specialization,
+                                  style: const TextStyle(color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -228,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Widget Helper
+  // ويدجت مساعدة للتخصصات
   static Column specialityItem(String iconPath, String label) {
     return Column(
       children: [

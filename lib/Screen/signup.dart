@@ -1,8 +1,72 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class signup extends StatelessWidget {
+class signup extends StatefulWidget {
   const signup({super.key});
+
+  @override
+  State<signup> createState() => _SignupState();
+}
+
+class _SignupState extends State<signup> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  String countryCode = '+44'; // كود افتراضي
+
+  final Dio dio = Dio();
+
+  Future<void> createAccount() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String phone = phoneController.text.trim();
+
+    if (email.isEmpty || password.isEmpty || phone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill all fields")),
+      );
+      return;
+    }
+
+    try {
+      final response = await dio.post(
+        'https://example.com/api/register', // استبدل بالرابط الصحيح
+        data: {
+          "email": email,
+          "password": password,
+          "phone": "$countryCode$phone"
+        },
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+          validateStatus: (status) => status != null && status < 500,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // نجح التسجيل
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Account created successfully")),
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Unauthorized. Check your credentials.")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${response.statusCode}")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Something went wrong: $e")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +78,6 @@ class signup extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const Text(
                 "Create Account",
                 style: TextStyle(
@@ -24,14 +87,15 @@ class signup extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-
               const Text(
-                "Sign up now and start exploring all that our app has to offer. We're excited to welcome you to our community!",
+                "Sign up now and start exploring all that our app has to offer.",
                 style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
               const SizedBox(height: 30),
 
+              // Email
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   hintText: "Email",
                   border: OutlineInputBorder(
@@ -44,7 +108,9 @@ class signup extends StatelessWidget {
               ),
               const SizedBox(height: 15),
 
+              // Password
               TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: "Password",
@@ -53,20 +119,25 @@ class signup extends StatelessWidget {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.grey[200],
                 ),
               ),
               const SizedBox(height: 15),
 
+              // Phone
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     CountryCodePicker(
-                      onChanged: (code) {},
+                      onChanged: (code) {
+                        setState(() {
+                          countryCode = code.dialCode ?? '+44';
+                        });
+                      },
                       initialSelection: 'GB',
                       favorite: const ['+44', 'GB'],
                       showFlag: true,
@@ -77,6 +148,7 @@ class signup extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextField(
+                        controller: phoneController,
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
                           hintText: "Your number",
@@ -89,123 +161,27 @@ class signup extends StatelessWidget {
               ),
               const SizedBox(height: 25),
 
+              // Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF247CFF),
+                    backgroundColor: const Color(0xFF247CFF),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
+                  onPressed: createAccount,
                   child: const Text(
                     "Create Account",
-                    style: TextStyle(fontSize: 16,color: Colors.white)
-                    ,
-
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 20),
-
-              Row(
-                children: const [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "Or sign in with",
-                      style: TextStyle(color: Colors.black54),
-                    ),
-                  ),
-                  Expanded(child: Divider()),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.grey.shade200,
-                    backgroundImage: AssetImage("assets/google.jpg"),
-                  ),
-                  const SizedBox(width: 20),
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Colors.grey.shade200,
-                    backgroundImage: AssetImage("assets/facebook.jpg"),
-                  ),
-                  const SizedBox(width: 20),
-                  CircleAvatar(
-                    radius: 38,
-                    backgroundColor: Colors.grey.shade200,
-                    backgroundImage: AssetImage("assets/apple.jpg"),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-
-              Text.rich(
-                TextSpan(
-                  text: "By logging, you agree to our ",
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
-                  children: [
-                    TextSpan(
-                      text: "Terms & Conditions",
-                      style: const TextStyle( color: Colors.blue),
-                    ),
-                    const TextSpan(text: " and "),
-                    TextSpan(
-                      text: "Privacy Policy",
-                      style: const TextStyle( color: Colors.blue),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Already have an account yet?",
-                    style: TextStyle(fontSize: 15, color: Colors.black54),
-                  ),
-                  const SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/signIn');
-
-                    },
-                    child: const Text(
-                      "signIn",
-                      style: TextStyle(fontSize: 15, color: Colors.blue),
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _socialIcon(String imageUrl) {
-    return InkWell(
-      onTap: () {},
-      child: CircleAvatar(
-        radius: 20,
-        backgroundColor: Colors.grey[200],
-        backgroundImage: NetworkImage(imageUrl),
       ),
     );
   }
