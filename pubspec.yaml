@@ -45,6 +45,8 @@ dependencies:
   provider_kit: ^0.0.1
   http: ^1.2.0
   dio: ^5.3.0
+  intl_field_phone: ^3.3.1
+  intl_phone_field: ^3.2.0
 
 
 

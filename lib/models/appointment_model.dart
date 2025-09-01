@@ -1,25 +1,35 @@
-class AppointmentModel {
+class Appointment {
   final int id;
   final int doctorId;
   final String startTime;
-  final String status;
-  final String? notes;
+  final String notes;
+  final String type; // New (In Person, Video Call, Phone Call)
 
-  AppointmentModel({
+  Appointment({
     required this.id,
     required this.doctorId,
     required this.startTime,
-    required this.status,
-    this.notes,
+    required this.notes,
+    required this.type,
   });
 
-  factory AppointmentModel.fromJson(Map<String, dynamic> json) {
-    return AppointmentModel(
-      id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
-      doctorId: json['doctor_id'] is int ? json['doctor_id'] : int.parse(json['doctor_id'].toString()),
-      startTime: json['start_time'] ?? '',
-      status: json['status'] ?? '',
-      notes: json['notes'],
+  factory Appointment.fromJson(Map<String, dynamic> json) {
+    return Appointment(
+      id: json["id"] ?? 0,
+      doctorId: json["doctor_id"] ?? 0,
+      startTime: json["start_time"] ?? "",
+      notes: json["notes"] ?? "",
+      type: json["type"] ?? "In Person", // Default
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "doctor_id": doctorId,
+      "start_time": startTime,
+      "notes": notes,
+      "type": type,
+    };
   }
 }
